@@ -1,0 +1,97 @@
+/* eslint-disable  func-names */
+/* eslint quote-props: ["error", "consistent"]*/
+/**
+ * This sample demonstrates a simple skill built with the Amazon Alexa Skills
+ * nodejs skill development kit.
+ * This sample supports multiple lauguages. (en-US, en-GB, de-DE).
+ * The Intent Schema, Custom Slots and Sample Utterances for this skill, as well
+ * as testing instructions are located at https://github.com/alexa/skill-sample-nodejs-fact
+ **/
+
+'use strict';
+const Alexa = require('alexa-sdk');
+
+//=========================================================================================================================================
+//TODO: The items below this comment need your attention.
+//=========================================================================================================================================
+
+//Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
+//Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
+const APP_ID = undefined;
+
+const SKILL_NAME = 'fact about nutrition';
+const GET_FACT_MESSAGE = "Here's your fact: ";
+const HELP_MESSAGE = 'You can say tell me a nutrition fact, or, you can say exit... What can I help you with?';
+const HELP_REPROMPT = 'What can I help you with?';
+const STOP_MESSAGE = 'Goodbye!';
+
+//=========================================================================================================================================
+//TODO: Replace this data with your own.  You can find translations of this data at http://github.com/alexa/skill-sample-node-js-fact/data
+//=========================================================================================================================================
+const data = [
+    'Your body replaces your blood cells every three months.',
+    'During teen years between 12 and 18, the bones restructure themselves every year.',
+    'the human body is made up of fifty trilion cells.',
+    'every second, our cells are coordinating billions of chemical reactions.',
+    'nutrition and personal growth are related. You cannot look at one without the other.',
+    'Diets should be based on the indivdual; not the dietary theory.',
+    'post-modern nutrition emphasiszes individuals recognizing their relationships, career, pahyscial activity, and spirtual practice are connected to their nutrition and physical health.',
+    'One persons food is another persons poison based on genetic and cultural heretage.',
+    'your blood type can affect the foods you eat.',
+    'A second medical opinion changes the diagonsis or treatment one third of the time.',
+    '85% of people do not get a second opinion.',
+    'adult bodies remodels and rebuilds their bones every 10 years.', 
+    'according to the department of Nutrition, Food Studies, and Public Health, 15 percent of Americans were obese in 1980. 22 percent the 1990. 31 percent in 2000. 34 percent in 2008 .',
+    'In 2014, a case study from the center for disease control shows that more than one third (36.5 percent) of adults, over 20, in United states, are obese.',
+    'In 2015-15, 39.6 percent of U.S. age 20 and older are obese. (37.9 percent for men and 41.1 percent for women).',
+    'accordng to wikipedia, Obesity has been cited as a contributing factor to approximatley 100,000-400,000 deaths in the United States per year.',
+    'according to wikipedia, the obesity rate for caucasian adults (Over 30 BMI) in 2015 was 29.7 percent.',
+    'according to wikipedia, the obesity for black adults (over 30 BMI) in 2015 was 39.8 percent.',
+    'according to wikipedia, the obesity rate for american Indian or Alaska native adults (over 30 BMI) in the United States was 42.9 percent.',
+    'according to wikipedia, the obesity rate for asian adult (over 30 BMI) in the United states in 2015 was 10.7 percent.',
+    'according to wikipedia, the obesity rate for the hispanic or latino adults (over 30 BMI) in 2015 was 31.8 percent.',
+    'according to wikipedia, the obesity rate for Native Hawaiian or other pacific Islander adults (over 30 BMI) in the United States in 2015 was 33.4 percent.',
+    'according to wikipedia, over 70 million adults in the United States are obese 99 million are overweight.',
+    ''
+];
+//=========================================================================================================================================
+//Editing anything below this line might break your skill.
+//=========================================================================================================================================
+
+const handlers = {
+    'LaunchRequest': function () {
+        this.emit('GetNewFactIntent');
+    },
+    'GetNewFactIntent': function () {
+        const factArr = data;
+        const factIndex = Math.floor(Math.random() * factArr.length);
+        const randomFact = factArr[factIndex];
+        const speechOutput = GET_FACT_MESSAGE + randomFact;
+
+        this.response.cardRenderer(SKILL_NAME, randomFact);
+        this.response.speak(speechOutput);
+        this.emit(':responseReady');
+    },
+    'AMAZON.HelpIntent': function () {
+        const speechOutput = HELP_MESSAGE;
+        const reprompt = HELP_REPROMPT;
+
+        this.response.speak(speechOutput).listen(reprompt);
+        this.emit(':responseReady');
+    },
+    'AMAZON.CancelIntent': function () {
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
+    },
+    'AMAZON.StopIntent': function () {
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
+    },
+};
+
+exports.handler = function (event, context, callback) {
+    const alexa = Alexa.handler(event, context, callback);
+    alexa.APP_ID = APP_ID;
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+};
